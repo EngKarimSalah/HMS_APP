@@ -15,6 +15,10 @@
             int[] visitCount = new int[100];
             double[] billingAmount = new double[100];
 
+
+            DateTime[] lastVisitDate = new DateTime[100];
+
+
             // Patient[] patients = new Patient[100];
 
             //////////////////////////////////////////////////////
@@ -33,6 +37,7 @@
             assignedDoctors[lastIndex] = ""; 
             visitCount[lastIndex] = 2;
             billingAmount[lastIndex] = 0;
+            lastVisitDate[lastIndex] = DateTime.Today;
 
             lastIndex++;
 
@@ -78,7 +83,18 @@
                 Console.WriteLine("10. Exit");
                 Console.Write("Choose option: ");
 
-                int choice = int.Parse(Console.ReadLine());
+                int choice = 0;
+
+                try
+                {
+                 
+                    choice = int.Parse(Console.ReadLine());
+                }
+                catch(Exception ex) 
+                {
+                    Console.WriteLine( ex.Message );
+                    Console.WriteLine("Invalid input. Please choose a number from 1 to 10.");
+                }
 
                 switch (choice)
                 {
@@ -101,7 +117,7 @@
                         Console.Write("Department: ");
                         departments[lastIndex] = Console.ReadLine();
 
-
+                
                         patientIDs[lastIndex] = "P00" + lastIndex;
                         admitted[lastIndex] = false;
                         assignedDoctors[lastIndex] = "";
@@ -130,9 +146,14 @@
 
                                     admitted[i] = true;
                                     visitCount[i]++;
+                                    lastVisitDate[i]= DateTime.Now; 
 
                                     Console.WriteLine("Patient admitted successfully and assigned to " + assignedDoctors[i]);
-                                    Console.WriteLine("This patient has been admitted " + visitCount[i] + " times");
+
+                                    if (visitCount[i] > 1)
+                                        Console.WriteLine("This patient has been admitted " + visitCount[i] + " times");
+                                    else
+                                        Console.WriteLine("this is first time");
                                 }
                                 else
                                 {
@@ -172,9 +193,24 @@
                                     if (hasFee == "yes")
                                     {
                                         Console.Write("Enter consultation fee amount: ");
-                                        double fee = double.Parse(Console.ReadLine());
-                                        billingAmount[i] += fee;
-                                        visitCharges += fee;
+                                        double fee = 0;
+                                        try
+                                        {
+                                            fee = double.Parse(Console.ReadLine());
+                                            if (fee > 0)
+                                            {
+                                                billingAmount[i] += fee;
+                                                visitCharges += fee;
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("fee amount must be posititve");
+                                            }
+                                        }
+                                        catch(Exception e) 
+                                        {
+                                            Console.WriteLine("Invalid amount. Please enter a valid number.");
+                                        }
                                     }
 
                                     Console.Write("Any medication charges? (yes/no): ");
